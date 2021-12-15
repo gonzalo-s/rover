@@ -1,11 +1,22 @@
-import "./App.css";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
+import RoverSelect from "./components/views/roverSelect";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ChakraProvider } from "@chakra-ui/provider";
+import theme from "../src/themes/theme";
+
+const queryClient = new QueryClient();
 
 function App() {
+  console.log(theme);
   return (
-    <Box className="App" variant="grey" w="100vw" h="100vh" display="flex">
-      <Text>hola</Text>
-    </Box>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <Stack className="App" bg="red" w="100vw" h="100vh">
+          <Box w="100%" bg="orange" h="15vh" />
+          <RoverSelect />
+        </Stack>
+      </ChakraProvider>
+    </QueryClientProvider>
   );
 }
 
