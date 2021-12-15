@@ -2,7 +2,7 @@ import { Box, Image } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import getLastPhoto from "./API/getLastPhoto";
 
-export default function RoverImage({ solar, rover }) {
+export default function RoverImage({ solar, rover, goToView }) {
   let key = `getLastPhoto${rover}`;
   const { isLoading, data, error } = useQuery(key, () =>
     getLastPhoto(solar, rover)
@@ -16,6 +16,10 @@ export default function RoverImage({ solar, rover }) {
   }
   let photos = data.data.photos;
   let lastPhoto = photos[photos.length - 1];
+
+  function handleClick() {
+    goToView("gallery");
+  }
   return (
     <Box
       className="imgWrapper"
@@ -26,6 +30,7 @@ export default function RoverImage({ solar, rover }) {
       p="1rem"
       alignItems="center"
       justifyContent="center"
+      onClick={handleClick}
     >
       <Image
         src={lastPhoto.img_src}

@@ -3,7 +3,7 @@ import { getManifestsByName } from "./API/getManifestsByName";
 import { useQuery } from "react-query";
 import RoverImage from "./roverImage";
 
-function Spirit() {
+function Spirit({ goToView }) {
   const { isLoading, data, error } = useQuery("spiritManifest", () =>
     getManifestsByName("spirit")
   );
@@ -16,6 +16,8 @@ function Spirit() {
   let manifest = data.data.photo_manifest;
   let lastSol = manifest.max_sol;
   let name = manifest.name;
+  let photoDate = manifest.max_date;
+
   return (
     <Stack
       maxW="sm"
@@ -27,12 +29,12 @@ function Spirit() {
       alignItems="center"
       direction="column"
     >
-      <Text textAlign="center" fontSize="3xl" pt="1rem" pb="1rem" color="white">
+      <Text textAlign="center" fontSize="3xl" pt="1rem" color="white">
         {" "}
         {name}
       </Text>
-
-      <RoverImage solar={lastSol} rover={"spirit"} />
+      <Text color="gray.500">LAST PHOTO: {photoDate} </Text>
+      <RoverImage solar={lastSol} rover={"spirit"} goToView={goToView} />
     </Stack>
   );
 }

@@ -1,9 +1,9 @@
-import { Box, Stack, Flex, Text } from "@chakra-ui/react";
+import { Stack, Flex, Text } from "@chakra-ui/react";
 import { getManifestsByName } from "./API/getManifestsByName";
 import { useQuery } from "react-query";
 import RoverImage from "./roverImage";
 
-function Curiosity() {
+function Curiosity({ goToView }) {
   const { isLoading, data, error } = useQuery("curiosityManifest", () =>
     getManifestsByName("curiosity")
   );
@@ -16,6 +16,7 @@ function Curiosity() {
   let manifest = data.data.photo_manifest;
   let lastSol = manifest.max_sol;
   let name = manifest.name;
+  let photoDate = manifest.max_date;
   return (
     <Stack
       maxW="sm"
@@ -27,12 +28,12 @@ function Curiosity() {
       alignItems="center"
       direction="column"
     >
-      <Text textAlign="center" fontSize="3xl" pt="1rem" pb="1rem" color="white">
+      <Text textAlign="center" fontSize="3xl" pt="1rem" color="white">
         {" "}
         {name}
       </Text>
-
-      <RoverImage solar={lastSol} rover={"curiosity"} />
+      <Text color="gray.500">LAST PHOTO: {photoDate} </Text>
+      <RoverImage solar={lastSol} rover={"curiosity"} goToView={goToView} />
     </Stack>
   );
 }
