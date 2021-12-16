@@ -1,15 +1,11 @@
+import React, { useEffect } from "react";
 import { Box, SimpleGrid, Image } from "@chakra-ui/react";
+import { useGalleryUpdate } from "./ViewsContext";
 
 export default function GalleryContainer({ photos, date }) {
-  if (photos.length === 0)
-    return (
-      <Box w="100%" h="100%" border="1px" bg="gray.400">
-        There are no photos for {date}
-      </Box>
-    );
+  const galleryUpdate = useGalleryUpdate();
 
   // reformat Array
-
   let galleryPhotos = photos.map((photoObj) => {
     let newObj = {
       id: photoObj.id,
@@ -22,15 +18,22 @@ export default function GalleryContainer({ photos, date }) {
 
     return newObj;
   });
+  useEffect(() => {
+    galleryUpdate(galleryPhotos);
+  });
 
-  console.log("reformat ", galleryPhotos);
-
+  // if (photos.length === 0)
+  //   return (
+  //     <Box w="100%" h="100%" border="1px" bg="gray.400">
+  //       There are no photos for {date}
+  //     </Box>
+  //   );
   return (
     <Box w="100%" h="100%" border="1px" bg="gray.400" p="1rem">
       <SimpleGrid columns={5} spacingX="1rem" spacingY="1rem">
         {galleryPhotos.map((photo) => {
           return (
-            <Box w="100%" h="100%">
+            <Box w="100%" h="100%" key={photo.id}>
               <Image
                 src={photo.img_src}
                 alt={`Photo from ${photo.rover}`}

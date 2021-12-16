@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ChakraProvider } from "@chakra-ui/react";
-import { ViewsProvider } from "./ViewsContext";
+import { ViewsProvider } from "./components/ViewsContext";
 
 ReactDOM.render(
   <React.StrictMode>

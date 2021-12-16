@@ -16,7 +16,6 @@ function Opportunity() {
   let manifest = data.data.photo_manifest;
   let name = manifest.name;
   let lastDate = manifest.max_date;
-  console.log("op manifest ", manifest);
 
   return (
     <Stack

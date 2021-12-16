@@ -1,7 +1,7 @@
 import { Box, Image } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import getLastPhoto from "./API/getLastPhoto";
-import { useViewUpdate, useRoverUpdate } from "../ViewsContext";
+import { useViewUpdate, useRoverUpdate } from "./ViewsContext";
 
 export default function RoverImage({ date, rover }) {
   const goToView = useViewUpdate();

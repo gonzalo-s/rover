@@ -6,7 +6,7 @@ import { ChakraProvider } from "@chakra-ui/provider";
 import theme from "./themes/theme";
 import NavBar from "./components/navBar";
 import Gallery from "./components/views/gallery";
-import { useActiveView } from "./ViewsContext";
+import { useActiveView } from "./components/ViewsContext";
 
 const queryClient = new QueryClient();
 

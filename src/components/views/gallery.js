@@ -1,9 +1,9 @@
 import { useQuery } from "react-query";
-import { Stack, Box, Text } from "@chakra-ui/react";
+import { Stack, Box, Text, LightMode } from "@chakra-ui/react";
 import GalleryNav from "../galleryNav";
 import GalleryFilters from "../galleryFilters";
-import GalleryContainer from "../GalleryContainer";
-import { useActiveRover } from "../../ViewsContext";
+import GalleryContainer from "../galleryContainer";
+import { useActiveRover } from "../ViewsContext";
 import getPhotosByName from "../API/getPhotosByName";
 
 export default function Gallery() {
@@ -30,10 +30,8 @@ export default function Gallery() {
   if (error) {
     return <Box>Error: {error.message}</Box>;
   }
+
   let photos = data.data.photos;
-
-  console.log("filtered photos ", photos);
-
   return (
     <Stack>
       <Box
@@ -50,7 +48,15 @@ export default function Gallery() {
         justifyContent="space-around"
         border="1px"
       >
-        <Text>ROVER NAME</Text>
+        <Text fontSize="3xl">
+          {photos.length === 0 ? (
+            <Box w="100%" h="100%" border="1px">
+              There are no photos for {date}
+            </Box>
+          ) : (
+            "false"
+          )}
+        </Text>
         <Box display="flex" w="100%" align="center">
           <GalleryFilters />
         </Box>
