@@ -14,9 +14,8 @@ function Spirit({ goToView }) {
     return <Flex>Error: {error.message}</Flex>;
   }
   let manifest = data.data.photo_manifest;
-  let lastSol = manifest.max_sol;
+  let lastDate = manifest.max_date;
   let name = manifest.name;
-  let photoDate = manifest.max_date;
 
   return (
     <Stack
@@ -33,8 +32,8 @@ function Spirit({ goToView }) {
         {" "}
         {name}
       </Text>
-      <Text color="gray.500">LAST PHOTO: {photoDate} </Text>
-      <RoverImage solar={lastSol} rover={"spirit"} goToView={goToView} />
+      <Text color="gray.500">LAST PHOTO: {lastDate} </Text>
+      <RoverImage date={lastDate} rover={"spirit"} goToView={goToView} />
     </Stack>
   );
 }

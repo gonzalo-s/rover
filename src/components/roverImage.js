@@ -1,11 +1,15 @@
 import { Box, Image } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import getLastPhoto from "./API/getLastPhoto";
+import { useViewUpdate, useRoverUpdate } from "../ViewsContext";
 
-export default function RoverImage({ solar, rover, goToView }) {
+export default function RoverImage({ date, rover }) {
+  const goToView = useViewUpdate();
+  const roverUpdate = useRoverUpdate();
+
   let key = `getLastPhoto${rover}`;
   const { isLoading, data, error } = useQuery(key, () =>
-    getLastPhoto(solar, rover)
+    getLastPhoto(date, rover)
   );
 
   if (isLoading) {
@@ -19,6 +23,7 @@ export default function RoverImage({ solar, rover, goToView }) {
 
   function handleClick() {
     goToView("gallery");
+    roverUpdate(rover);
   }
   return (
     <Box

@@ -4,7 +4,7 @@ import Curiosity from "../curiosity";
 import Opportunity from "../opportunity";
 import Spirit from "../spirit";
 
-function RoverSelect({ view, goToView }) {
+function RoverSelect() {
   return (
     <Stack>
       <Box
@@ -19,9 +19,9 @@ function RoverSelect({ view, goToView }) {
         pt="1rem"
         pb="1rem"
       >
-        <Curiosity view={view} goToView={goToView} />
-        <Opportunity view={view} goToView={goToView} />
-        <Spirit view={view} goToView={goToView} />
+        <Curiosity />
+        <Opportunity />
+        <Spirit />
       </Box>
     </Stack>
   );

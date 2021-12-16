@@ -1,8 +1,13 @@
 import { Stack, Box } from "@chakra-ui/react";
+import { useActiveView, useViewUpdate } from "../ViewsContext";
 
-export default function NavBar({ view, goToView }) {
+export default function NavBar() {
   // selectRover | gallery | photo
 
+  const goToView = useViewUpdate();
+  const view = useActiveView();
+
+  console.log("navbar view ", view);
   function handleGalleryClick() {
     goToView("gallery");
   }

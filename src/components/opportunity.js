@@ -3,7 +3,7 @@ import { getManifestsByName } from "./API/getManifestsByName";
 import { useQuery } from "react-query";
 import RoverImage from "./roverImage";
 
-function Opportunity({ goToView }) {
+function Opportunity() {
   const { isLoading, data, error } = useQuery("opportunityManifest", () =>
     getManifestsByName("opportunity")
   );
@@ -14,9 +14,9 @@ function Opportunity({ goToView }) {
     return <Flex>Error: {error.message}</Flex>;
   }
   let manifest = data.data.photo_manifest;
-  let lastSol = manifest.max_sol;
   let name = manifest.name;
-  let photoDate = manifest.max_date;
+  let lastDate = manifest.max_date;
+  console.log("op manifest ", manifest);
 
   return (
     <Stack
@@ -33,8 +33,8 @@ function Opportunity({ goToView }) {
         {" "}
         {name}
       </Text>
-      <Text color="gray.500">LAST PHOTO: {photoDate} </Text>
-      <RoverImage solar={lastSol} rover={"opportunity"} goToView={goToView} />
+      <Text color="gray.500">LAST PHOTO: {lastDate} </Text>
+      <RoverImage date={lastDate} rover={"opportunity"} />
     </Stack>
   );
 }
