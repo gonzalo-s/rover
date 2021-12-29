@@ -3,14 +3,14 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ChakraProvider } from "@chakra-ui/react";
-import { ViewsProvider } from "./components/ViewsContext";
+import { AppContextProvider } from "./components/appContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider>
-      <ViewsProvider>
+      <AppContextProvider>
         <App />
-      </ViewsProvider>
+      </AppContextProvider>
     </ChakraProvider>
   </React.StrictMode>,
   document.getElementById("root")

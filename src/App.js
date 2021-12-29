@@ -1,47 +1,37 @@
 import React from "react";
-import { Stack, Text } from "@chakra-ui/react";
-import RoverSelect from "./components/views/roverSelect";
-import { QueryClient, QueryClientProvider } from "react-query";
 import { ChakraProvider } from "@chakra-ui/provider";
+import { Box } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { useAppContext } from "./components/appContext";
 import theme from "./themes/theme";
-import NavBar from "./components/navBar";
-import Gallery from "./components/views/gallery";
-import { useActiveView } from "./components/ViewsContext";
+import RoverSelect from "./components/views/RoverSelect";
+import GalleryContainer from "./components/views/GalleryContainer";
+import Photo from "./components/views/Photo";
+import "@fontsource/titillium-web";
 
 const queryClient = new QueryClient();
 
 function App() {
-  // selectRover | gallery | photo
+  // roverSelect | gallery | photo
 
-  const view = useActiveView();
-
-  const title = (
-    <Stack
-      className="menuWrapper"
-      w="100%"
-      bg="orange"
-      h="15vh"
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Text fontSize="4xl"> SELECT ROVER</Text>
-    </Stack>
-  );
+  const { activeView } = useAppContext();
 
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
-        <Stack className="App" bg="red" w="100%" h="100%">
-          {view !== "selectRover" ? <NavBar /> : title}
-          {view === "selectRover" ? (
-            <RoverSelect />
-          ) : view === "gallery" ? (
-            <Gallery />
-          ) : (
-            ""
-          )}
-        </Stack>
+        <Box
+          className="appWrapper"
+          minH="100%"
+          display="flex"
+          backgroundColor="black"
+          backgroundImage="url('https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/starfield-banner.jpg')"
+          backgroundRepeat="repeat"
+          justifyContent="center"
+        >
+          {activeView === "roverSelect" ? <RoverSelect /> : ""}
+          {activeView === "gallery" ? <GalleryContainer /> : ""}
+          {activeView === "photo" ? <Photo /> : ""}
+        </Box>
       </ChakraProvider>
     </QueryClientProvider>
   );
