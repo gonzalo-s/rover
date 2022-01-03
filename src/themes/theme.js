@@ -52,6 +52,9 @@ const config = {
           _disabled: {
             bg: "brand.blue",
           },
+          _focus: {
+            boxShadow: "none",
+          },
         },
         nasaFiltersActive: {
           bg: "brand.blue",
