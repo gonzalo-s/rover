@@ -11,14 +11,13 @@ import {
 import { useAppContext } from "../appContext";
 
 export default function Photo() {
-  const { filters, setActiveView } = useAppContext();
+  const { activePhoto, setActiveView, selectActivePhoto } = useAppContext();
 
   function handleOnClick() {
+    selectActivePhoto({});
     setActiveView("gallery");
   }
-  let activePhoto = filters.activePhoto;
 
-  console.log(filters);
   return (
     <Stack
       className="contentWrapper"
@@ -37,7 +36,7 @@ export default function Photo() {
         maxW="80%"
         border="1px"
         p="2rem"
-        backgroundColor="whiteAlpha.500"
+        backgroundColor="whiteAlpha.200"
       >
         <Tooltip label="click to close">
           <Image

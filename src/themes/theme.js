@@ -28,11 +28,16 @@ const config = {
   },
   colors: {
     brand: {
+      lightBlue: "#2164D9",
       blue: "#15418c",
+      darkBlue: "#113573",
       red: "#fc3d21",
     },
   },
   components: {
+    MenuButton: {
+      bg: "brand.blue",
+    },
     Button: {
       variants: {
         nasa: {
@@ -42,12 +47,43 @@ const config = {
           borderRadius: "0",
           _hover: {
             bg: "brand.blue",
+            color: "brand.red",
           },
           _disabled: {
             bg: "brand.blue",
           },
-          _active: {
+        },
+        nasaFiltersActive: {
+          bg: "brand.blue",
+          color: "white",
+          letterSpacing: "0.1rem",
+          borderRadius: "0",
+          _hover: {
+            //bg: "brand.darkBlue",
+            color: "brand.red",
+          },
+          _disabled: {
             bg: "brand.blue",
+          },
+          _focus: {
+            boxShadow: "none",
+            bg: "red",
+          },
+          _active: {
+            bg: "red",
+          },
+        },
+        nasaFiltersInactive: {
+          bg: "blackAlpha.500",
+          color: "green",
+          letterSpacing: "0.1rem",
+          borderRadius: "0",
+          _hover: {
+            //bg: "brand.lightBlue",
+            color: "brand.red",
+          },
+          _focus: {
+            boxShadow: "none",
           },
         },
       },

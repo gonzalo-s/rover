@@ -11,13 +11,7 @@ export default function Gallery({ activePage }) {
   }
 
   return (
-    <Box
-      w="100%"
-      h="100%"
-      border="1px"
-      backgroundColor="whiteAlpha.500"
-      p="1rem"
-    >
+    <Box w="100%" h="100%" backgroundColor="whiteAlpha.200" p="1rem">
       {activeView === "gallery" ? (
         <SimpleGrid columns={5} spacingX="1rem" spacingY="1rem">
           {activePage.map((photo) => {

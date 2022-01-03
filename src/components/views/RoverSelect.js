@@ -28,19 +28,12 @@ function RoverSelect() {
   }
 
   return (
-    <VStack
-      className="roverSelectWrapper"
-      w="100%"
-      minH="100%"
-      border="1px"
-      borderColor="green"
-    >
+    <VStack className="roverSelectWrapper" w="100%" minH="100%">
       <Box
         display="flex"
         flexDirection={"row"}
         wrap={"nowrap"}
         w="100%"
-        bg="red"
         justifyContent={"space-between"}
         alignItems={"center"}
       >
@@ -53,7 +46,7 @@ function RoverSelect() {
           justifyContent="center"
           letterSpacing="0.5rem"
         >
-          <Text fontSize="5xl" color="white">
+          <Text fontSize="6xl" color="white">
             {" "}
             SELECT ROVER
           </Text>

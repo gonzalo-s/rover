@@ -1,51 +1,84 @@
-import { Box, Button, ButtonGroup } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from "@chakra-ui/react";
 import React from "react";
 import { useAppContext } from "../appContext";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
 export default function GalleryFilters() {
   const { filters, filterParameters, selectCameras } = useAppContext();
 
   let availableCameras = filterParameters.availableCameras;
 
-  function isCameraInFilters(camera) {
-    return filters.cameras.includes(camera);
-  }
-
   function handleOnClick(camera) {
-    let filteredCamerasCopy = [...filters.cameras];
-    console.log("filtered cameras copy: ", filteredCamerasCopy);
-    if (isCameraInFilters(camera)) {
-      console.log("camera is in filters");
-      filteredCamerasCopy = filteredCamerasCopy.filter(
-        (filterCam) => filterCam !== camera
-      );
-    } else {
-      filteredCamerasCopy.push(camera);
-    }
-
-    selectCameras(filteredCamerasCopy);
+    selectCameras(camera);
   }
-
+  console.log("filters in galleryFilters: ", filters.camera);
   return (
     <Box display="flex" alignItems="center" w="100%" h="100%" p="0.5rem">
-      <ButtonGroup className="cameras" spacing="2px">
-        {availableCameras.map((camera, id) => {
-          return (
-            <Button
-              w="6rem"
-              key={id}
-              letterSpacing="0.1rem"
-              colorScheme="whiteAlpha"
-              variant="nasa"
-              isActive={isCameraInFilters(camera)}
-              value={camera}
-              onClick={(event) => handleOnClick(event.target.value)}
-            >
-              {camera}
-            </Button>
-          );
-        })}
-      </ButtonGroup>
+      <Menu isLazy autoSelect={false}>
+        <MenuButton
+          as={Button}
+          rightIcon={<ChevronDownIcon />}
+          variant="nasa"
+          w="25rem"
+        >
+          Selected Camera: {filters.camera}
+        </MenuButton>
+        <MenuList
+          display="flex"
+          flexDirection="column"
+          alignItems="stretch"
+          minW="0"
+          border="none"
+          bg="blackAlpha.500"
+          p="8px"
+          borderRadius="0"
+          color="white"
+          variant="nasa"
+        >
+          <MenuItem
+            as={Button}
+            w="12rem"
+            key={0}
+            letterSpacing="0.1rem"
+            value={"ALL"}
+            variant={
+              filters.camera === "ALL"
+                ? "nasaFiltersActive"
+                : "nasaFiltersInactive"
+            }
+            onClick={(event) => handleOnClick(event.target.value)}
+          >
+            ALL
+          </MenuItem>
+          {availableCameras.map((camera, id) => {
+            return (
+              <MenuItem
+                as={Button}
+                w="12rem"
+                key={id}
+                letterSpacing="0.1rem"
+                colorScheme="whiteAlpha"
+                variant={
+                  filters.camera === camera
+                    ? "nasaFiltersActive"
+                    : "nasaFiltersInactive"
+                }
+                value={camera}
+                onClick={(event) => handleOnClick(event.target.value)}
+              >
+                {camera}
+              </MenuItem>
+            );
+          })}
+        </MenuList>
+      </Menu>
     </Box>
   );
 }

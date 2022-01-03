@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Stack,
   Box,
@@ -16,18 +17,35 @@ import GalleryFilters from "../gallery/GalleryFilters";
 import logo from "../../img/nasa-logo.svg";
 
 export default function GalleryContainer() {
-  const { filters, getAvailableCamerasAndPages, pages, setActiveView } =
-    useAppContext();
+  const {
+    filters,
+    getMaxPageAndPaginate,
+    pages,
+    setActiveView,
+    getAvailableCamerasFromManifest,
+    manifest,
+  } = useAppContext();
 
   const isThereADate = filters.date ? true : false;
   let activePage = null;
+
   const { isLoading, isError, error } = useQuery(
     ["getPhotosByNameEarthDate", filters],
-    () => getPhotosByNameEarthDate(filters.date.value, filters.rover),
+    () =>
+      getPhotosByNameEarthDate(
+        filters.date.value,
+        filters.rover,
+        filters.camera
+      ),
     {
       enabled: isThereADate,
       onSuccess: (data) => {
-        getAvailableCamerasAndPages(data.data.photos);
+        getMaxPageAndPaginate(data.data.photos);
+        getAvailableCamerasFromManifest(
+          filters.date.type,
+          filters.date.value,
+          manifest
+        ); // date type | date value
       },
     }
   );
@@ -67,7 +85,7 @@ export default function GalleryContainer() {
           justifyContent="center"
           letterSpacing="0.5rem"
         >
-          <Text fontSize="5xl" color="white">
+          <Text fontSize="6xl" color="white">
             {" "}
             {filters.rover?.toUpperCase()}
           </Text>

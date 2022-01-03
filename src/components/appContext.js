@@ -15,11 +15,11 @@ export function AppContextProvider({ children }) {
 
   //const [galleryItems, setGalleryItems] = useState([]);
 
+  const [activePhoto, setActivePhoto] = useState();
+
   const [pages, setPages] = useState(null);
 
   const [manifest, setManifest] = useState();
-
-  const [filteredGallery, setFilteredGallery] = useState(false);
 
   const [filterParameters, setFilterParameters] = useState({
     maxDate: null,
@@ -33,11 +33,9 @@ export function AppContextProvider({ children }) {
 
     date: null,
 
-    cameras: null,
+    camera: "ALL",
 
     page: 1,
-
-    activePhoto: null,
   });
 
   useEffect(() => {
@@ -68,11 +66,9 @@ export function AppContextProvider({ children }) {
 
         date: null,
 
-        cameras: null,
+        camera: "ALL",
 
         page: 1,
-
-        activePhoto: null,
       });
     }
   }, [activeView]);
@@ -93,104 +89,108 @@ export function AppContextProvider({ children }) {
     let newFilterParameters = JSON.parse(JSON.stringify(filterParameters));
     newFilterParameters.maxDate = manifest.max_date;
     newFilterParameters.maxSol = manifest.max_sol;
+    newFilterParameters.availableCameras = getAvailableCamerasFromManifest(
+      "earth",
+      manifest.max_date,
+      manifest
+    );
     setFilterParameters(newFilterParameters);
   }
+  function getAvailableCamerasFromManifest(type, value, manifest) {
+    let photos = manifest.photos;
+    let maxDateIdx = photos.length - 1;
+    console.log(photos[maxDateIdx]);
+    let availableCameras = photos[maxDateIdx].cameras;
+    let newEarthDate;
+    let newSolDate;
 
-  function pagination(photos, maxPage, photosPPage = 25) {
-    let idxStart = 0;
-    let counter = 1;
-    let newPhotos = [];
-    function loop() {
-      if (counter <= maxPage) {
-        const newPage = photos.slice(idxStart, idxStart + photosPPage);
-        newPhotos.push(newPage);
-        counter++;
-        idxStart += photosPPage;
-        loop();
-      } else {
-        return;
-      }
+    if ((type === "sol") & (value !== manifest.max_sol)) {
+      newSolDate = value;
+      photos.map((date) => {
+        if (date.sol === newSolDate) {
+          return (availableCameras = date.cameras);
+        }
+        return availableCameras;
+      });
     }
-    loop();
 
-    return newPhotos;
+    if ((type === "earth") & (value !== manifest.max_date)) {
+      newEarthDate = value;
+      photos.map((date) => {
+        if (date.earth_date === newEarthDate) {
+          return (availableCameras = date.cameras);
+        }
+        return availableCameras;
+      });
+    }
+    console.log("type: ", type, "  value: ", value);
+    return availableCameras;
   }
 
-  function getAvailableCamerasAndPages(photos) {
-    //get available cameras
+  function getMaxPageAndPaginate(photos) {
     //get max pages
     //set pages arrays
     let imgPerPage = 25;
     let newFilterParameters = JSON.parse(JSON.stringify(filterParameters));
-    let availableCameras = getCamerasFromArr(photos);
-    newFilterParameters.availableCameras = availableCameras;
     let maxPage = Math.ceil(photos.length / imgPerPage);
     newFilterParameters.maxPage = maxPage;
-    if (!filters.cameras) {
-      console.log("ASDKFNASKDNBL");
-      selectCameras(availableCameras);
+
+    function pagination(photos, maxPage, photosPPage = 25) {
+      let idxStart = 0;
+      let counter = 1;
+      let newPhotos = [];
+      function loop() {
+        if (counter <= maxPage) {
+          const newPage = photos.slice(idxStart, idxStart + photosPPage);
+          newPhotos.push(newPage);
+          counter++;
+          idxStart += photosPPage;
+          loop();
+        } else {
+          return;
+        }
+      }
+      loop();
+
+      return newPhotos;
     }
     setPages(pagination(photos, maxPage, imgPerPage));
     setFilterParameters(newFilterParameters);
-  }
-
-  function getCamerasFromArr(arr) {
-    let cameras = [];
-
-    arr.map((photo) => {
-      if (isCameraAlreadyInArray(cameras, photo.camera.name) === undefined) {
-        cameras.push(photo.camera.name);
-      }
-      return cameras;
-    });
-    return cameras;
-  }
-
-  function isCameraAlreadyInArray(arr, camera) {
-    let found = arr.find((element) => {
-      return element === camera;
-    });
-    return found;
   }
 
   function selectRover(rover) {
     let newFilters = JSON.parse(JSON.stringify(filters));
     newFilters.rover = rover;
     newFilters.date = null;
-    newFilters.cameras = null;
+    newFilters.camera = "ALL";
     newFilters.page = 1;
-    newFilters.activePhoto = null;
     setFilters(newFilters);
   }
 
   function selectDate(dateType, dateValue) {
     let newFilters = JSON.parse(JSON.stringify(filters));
     newFilters.date = { type: dateType, value: dateValue };
-    newFilters.cameras = null;
+    newFilters.camera = "ALL";
     newFilters.page = 1;
-    newFilters.activePhoto = null;
     setFilters(newFilters);
   }
 
-  function selectCameras(cameras) {
+  function selectCameras(camera) {
     let newFilters = JSON.parse(JSON.stringify(filters));
-    newFilters.cameras = cameras;
+    console.log("appContext selectCameras: ", camera);
+    newFilters.camera = camera;
     newFilters.page = 1;
-    newFilters.activePhoto = null;
     setFilters(newFilters);
   }
 
   function selectPage(page) {
     let newFilters = JSON.parse(JSON.stringify(filters));
     newFilters.page = page;
-    newFilters.activePhoto = null;
     setFilters(newFilters);
   }
 
   function selectActivePhoto(activePhoto) {
-    let newFilters = JSON.parse(JSON.stringify(filters));
-    newFilters.activePhoto = activePhoto;
-    setFilters(newFilters);
+    setActivePhoto(activePhoto);
   }
 
   return (
@@ -205,13 +205,13 @@ export function AppContextProvider({ children }) {
         filterParameters,
         manifest,
         setDefaultFromManifest,
-        getAvailableCamerasAndPages,
+        getMaxPageAndPaginate,
         pages,
         activeView,
         setActiveView,
         selectActivePhoto,
-        filteredGallery,
-        setFilteredGallery,
+        activePhoto,
+        getAvailableCamerasFromManifest,
       }}
     >
       {children}
