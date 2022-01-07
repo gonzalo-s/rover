@@ -11,14 +11,21 @@ export default function Gallery({ activePage }) {
   }
 
   return (
-    <Box w="100%" h="100%" backgroundColor="whiteAlpha.200" p="1rem">
+    <Box
+      w="100%"
+      h="100%"
+      backgroundColor="whiteAlpha.200"
+      p="1rem"
+      display="flex"
+      justifyContent="center"
+    >
       {activeView === "gallery" ? (
         <SimpleGrid columns={5} spacingX="1rem" spacingY="1rem">
           {activePage.map((photo) => {
             return (
               <Box
-                w="100%"
-                h="100%"
+                w="150px"
+                h="150px"
                 key={photo.id}
                 as="button"
                 onClick={() => handleOnClick(photo)}
@@ -26,14 +33,15 @@ export default function Gallery({ activePage }) {
                 flexDirection="column"
                 alignItems="center"
                 justifyContent="center"
-                _hover={{
-                  p: "2px",
-                }}
               >
                 <Image
+                  boxSize="150px"
                   src={photo.img_src}
                   alt={`Photo from ${photo.rover}`}
                   borderRadius="2%"
+                  _hover={{
+                    p: "2px",
+                  }}
                 />
               </Box>
             );

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import getManifestsByName from "./API/getManifestsByName";
-
+import { parseISO } from "date-fns";
 const AppContext = React.createContext();
 
 export function useAppContext() {
@@ -10,30 +10,24 @@ export function useAppContext() {
 export function AppContextProvider({ children }) {
   // roverSelect | gallery | photo
   const [activeView, setActiveView] = useState("roverSelect");
-
-  //const [activeRover, setActiveRover] = useState({});
-
-  //const [galleryItems, setGalleryItems] = useState([]);
-
   const [activePhoto, setActivePhoto] = useState();
-
+  const [rawPhotos, setRawPhotos] = useState(null);
   const [pages, setPages] = useState(null);
-
   const [manifest, setManifest] = useState();
-
+  const [daypickerParameters, setDaypickerParameters] = useState({});
+  const [solParameters, setSolParameters] = useState({});
   const [filterParameters, setFilterParameters] = useState({
     maxDate: null,
     maxSol: null,
     availableCameras: null,
     maxPage: null,
   });
-
   const [filters, setFilters] = useState({
     rover: null, // curiosity | opporunity | spirit
 
     date: null,
 
-    camera: "ALL",
+    cameras: null,
 
     page: 1,
   });
@@ -42,8 +36,11 @@ export function AppContextProvider({ children }) {
     if (filters.rover) {
       getManifestsByName(filters.rover)
         .then((data) => {
-          setManifest(data.data.photo_manifest);
-          setDefaultFromManifest(data.data.photo_manifest);
+          let manifest = data.data.photo_manifest;
+          setDatepicker(manifest);
+          setSol(manifest);
+          setManifest(manifest);
+          setDefaultFromManifest(manifest);
         })
         .catch((error) => {
           console.log("error fetching manifest: ", error);
@@ -53,7 +50,8 @@ export function AppContextProvider({ children }) {
 
   useEffect(() => {
     if (activeView === "roverSelect") {
-      resetAll();
+      setManifest();
+      setRawPhotos(null);
       setPages(null);
       setFilterParameters({
         maxDate: null,
@@ -66,72 +64,123 @@ export function AppContextProvider({ children }) {
 
         date: null,
 
-        camera: "ALL",
+        cameras: null,
 
         page: 1,
       });
     }
   }, [activeView]);
 
-  function resetAll() {
-    setManifest();
+  useEffect(() => {
+    if (rawPhotos) {
+      getMaxPageAndPaginate(filterPhotosByCameras(rawPhotos, filters.cameras));
+    }
+  }, [filters, rawPhotos]);
+
+  // console.log("-filterParameters: ", filterParameters);
+  // console.log("-filters :", filters);
+  // console.log("-manifest :", manifest);
+  // console.log("-pages :", pages);
+  // console.log("-rawPhotos :", rawPhotos);
+  // console.log("- daypickerParameters :", daypickerParameters);
+
+  function filterPhotosByCameras(rawPhotos, cameras) {
+    let newPhotos = rawPhotos.filter((photos) => {
+      return cameras.includes(photos.camera.name);
+    });
+    return newPhotos;
   }
-  console.log("filterParameters: ", filterParameters);
-  console.log("filters :", filters);
-  console.log("manifest :", manifest);
+
+  function setDatepicker(manifest) {
+    let parameters = {};
+    parameters.maxDate = parseISO(manifest.max_date);
+    parameters.minDate = parseISO(manifest.landing_date);
+    let dates = manifest.photos.map((date) => date.earth_date);
+    parameters.dates = dates.map((date) => parseISO(date));
+    parameters.equivalentDates = manifest.photos.map((date) => {
+      return { sol: date.sol.toString(), equivalentEarthDate: date.earth_date };
+    });
+    setDaypickerParameters(parameters);
+  }
+
+  function setSol(manifest) {
+    let sol = manifest.photos.map((photo) => photo.sol);
+    let parameters = {};
+    parameters.maxSol = sol[sol.length - 1];
+    parameters.minSol = sol[0];
+    parameters.sol = sol;
+    setSolParameters(parameters);
+  }
 
   function setDefaultFromManifest(manifest) {
-    getFilterParameters(manifest);
-    selectDate("earth", manifest.max_date);
+    setAvailableCamMaxDateSolFromManifest(manifest);
+    selectDateCameraFromManifest("earth", manifest.max_date, manifest);
   }
 
-  function getFilterParameters(manifest) {
+  function selectDateCameraFromManifest(dateType, dateValue, manifest) {
+    let newFilters = JSON.parse(JSON.stringify(filters));
+    let cameras = getAvailableCamerasFromManifest(
+      dateType,
+      manifest.max_date,
+      manifest
+    );
+    newFilters.date = { type: dateType, value: dateValue };
+    newFilters.cameras = cameras;
+    newFilters.page = 1;
+    setFilters(newFilters);
+  }
+
+  function setAvailableCamMaxDateSolFromManifest(manifest) {
     let newFilterParameters = JSON.parse(JSON.stringify(filterParameters));
-    newFilterParameters.maxDate = manifest.max_date;
-    newFilterParameters.maxSol = manifest.max_sol;
-    newFilterParameters.availableCameras = getAvailableCamerasFromManifest(
+    let availableCameras = getAvailableCamerasFromManifest(
       "earth",
       manifest.max_date,
       manifest
     );
+    newFilterParameters.availableCameras = availableCameras;
+    newFilterParameters.maxDate = manifest.max_date;
+    newFilterParameters.maxSol = manifest.max_sol;
     setFilterParameters(newFilterParameters);
   }
-  function getAvailableCamerasFromManifest(type, value, manifest) {
+
+  function setAvailableCameras(availableCameras) {
+    let newFilterParameters = JSON.parse(JSON.stringify(filterParameters));
+    newFilterParameters.availableCameras = availableCameras;
+    setFilterParameters(newFilterParameters);
+  }
+
+  function getAvailableCamerasFromManifest(dateType, dateValue, manifest) {
     let photos = manifest.photos;
     let maxDateIdx = photos.length - 1;
-    console.log(photos[maxDateIdx]);
     let availableCameras = photos[maxDateIdx].cameras;
     let newEarthDate;
     let newSolDate;
 
-    if ((type === "sol") & (value !== manifest.max_sol)) {
-      newSolDate = value;
+    if ((dateType === "sol") & (dateValue !== manifest.max_sol)) {
+      newSolDate = dateValue;
       photos.map((date) => {
         if (date.sol === newSolDate) {
-          return (availableCameras = date.cameras);
+          availableCameras = date.cameras;
         }
         return availableCameras;
       });
     }
 
-    if ((type === "earth") & (value !== manifest.max_date)) {
-      newEarthDate = value;
+    if ((dateType === "earth") & (dateValue !== manifest.max_date)) {
+      newEarthDate = dateValue;
       photos.map((date) => {
         if (date.earth_date === newEarthDate) {
-          return (availableCameras = date.cameras);
+          availableCameras = date.cameras;
         }
         return availableCameras;
       });
     }
-    console.log("type: ", type, "  value: ", value);
     return availableCameras;
   }
 
   function getMaxPageAndPaginate(photos) {
-    //get max pages
-    //set pages arrays
-    let imgPerPage = 25;
     let newFilterParameters = JSON.parse(JSON.stringify(filterParameters));
+    let imgPerPage = 25;
     let maxPage = Math.ceil(photos.length / imgPerPage);
     newFilterParameters.maxPage = maxPage;
 
@@ -154,31 +203,41 @@ export function AppContextProvider({ children }) {
 
       return newPhotos;
     }
-    setPages(pagination(photos, maxPage, imgPerPage));
     setFilterParameters(newFilterParameters);
+    setPages(pagination(photos, maxPage, imgPerPage));
   }
 
   function selectRover(rover) {
     let newFilters = JSON.parse(JSON.stringify(filters));
     newFilters.rover = rover;
     newFilters.date = null;
-    newFilters.camera = "ALL";
+    newFilters.cameras = null;
     newFilters.page = 1;
     setFilters(newFilters);
   }
 
   function selectDate(dateType, dateValue) {
     let newFilters = JSON.parse(JSON.stringify(filters));
-    newFilters.date = { type: dateType, value: dateValue };
-    newFilters.camera = "ALL";
+    newFilters.date = {
+      type: dateType,
+      value: dateValue,
+      equivalentEarthDate: "",
+    };
     newFilters.page = 1;
+    setRawPhotos(null);
+    let availableCameras = getAvailableCamerasFromManifest(
+      dateType,
+      dateValue,
+      manifest
+    );
+    setAvailableCameras(availableCameras);
+    newFilters.cameras = availableCameras;
     setFilters(newFilters);
   }
 
-  function selectCameras(camera) {
+  function selectCameras(availableCameras) {
     let newFilters = JSON.parse(JSON.stringify(filters));
-    console.log("appContext selectCameras: ", camera);
-    newFilters.camera = camera;
+    newFilters.cameras = availableCameras;
     newFilters.page = 1;
     setFilters(newFilters);
   }
@@ -201,7 +260,6 @@ export function AppContextProvider({ children }) {
         selectCameras,
         selectPage,
         filters,
-        getFilterParameters,
         filterParameters,
         manifest,
         setDefaultFromManifest,
@@ -212,6 +270,11 @@ export function AppContextProvider({ children }) {
         selectActivePhoto,
         activePhoto,
         getAvailableCamerasFromManifest,
+        setAvailableCameras,
+        rawPhotos,
+        setRawPhotos,
+        daypickerParameters,
+        solParameters,
       }}
     >
       {children}

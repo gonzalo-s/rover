@@ -10,8 +10,19 @@ export default function GalleryPagesNav() {
     selectPage(Number(value));
   }
   return (
-    <Box w="100%" display="flex" justifyContent="center" p="10px">
-      <ButtonGroup spacing="2px">
+    <Box
+      w="100%"
+      display="flex"
+      flexWrap={"wrap"}
+      justifyContent="center"
+      p="10px"
+    >
+      <ButtonGroup
+        spacing="2px"
+        flexWrap={"wrap"}
+        w="50rem"
+        justifyContent="center"
+      >
         {pages.map((page, idx) => {
           let pageNumber = idx + 1;
 

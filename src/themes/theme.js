@@ -38,6 +38,26 @@ const config = {
     MenuButton: {
       bg: "brand.blue",
     },
+    Input: {
+      variants: {
+        nasa: {
+          fontWeight: "semibold",
+          color: "white",
+          letterSpacing: "0.1rem",
+          borderRadius: "0",
+          _hover: {
+            bg: "brand.blue",
+            color: "brand.red",
+          },
+          _disabled: {
+            bg: "brand.blue",
+          },
+          _focus: {
+            boxShadow: "none",
+          },
+        },
+      },
+    },
     Button: {
       variants: {
         nasa: {

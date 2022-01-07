@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { useAppContext } from "../appContext";
-import getPhotosByNameEarthDate from "../API/getPhotosByNameEarthDate";
+import getPhotosByEarthSolName from "../API/getPhotosByEarthSolName";
 import Gallery from "../gallery/Gallery";
 import GalleryPagesNav from "../gallery/GalleryPagesNav";
 import GalleryFilters from "../gallery/GalleryFilters";
@@ -22,35 +22,43 @@ export default function GalleryContainer() {
     getMaxPageAndPaginate,
     pages,
     setActiveView,
-    getAvailableCamerasFromManifest,
-    manifest,
+    rawPhotos,
+    setRawPhotos,
   } = useAppContext();
-
+  const isRawPhotosNull = rawPhotos === null ? true : false;
   const isThereADate = filters.date ? true : false;
-  let activePage = null;
+  const isQueryEnabled = isRawPhotosNull && isThereADate ? true : false;
 
+  let activePage = null;
   const { isLoading, isError, error } = useQuery(
-    ["getPhotosByNameEarthDate", filters],
+    ["getPhotosByEarthSolName", filters],
     () =>
-      getPhotosByNameEarthDate(
+      getPhotosByEarthSolName(
+        filters.date.type,
         filters.date.value,
-        filters.rover,
-        filters.camera
+        filters.rover
       ),
     {
-      enabled: isThereADate,
+      enabled: isQueryEnabled,
       onSuccess: (data) => {
+        setRawPhotos(data.data.photos);
         getMaxPageAndPaginate(data.data.photos);
-        getAvailableCamerasFromManifest(
-          filters.date.type,
-          filters.date.value,
-          manifest
-        ); // date type | date value
       },
     }
   );
 
-  if (isLoading) return <Box>Loading...</Box>;
+  if (isLoading)
+    return (
+      <HStack justifyContent="center">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="brand.blue"
+          size="xl"
+        />
+      </HStack>
+    );
 
   if (isError) return <Box>ERROR Setting defaults: {error.message}</Box>;
 
@@ -98,7 +106,6 @@ export default function GalleryContainer() {
         flexDirection="column"
         pb="1rem"
         alignItems="center"
-        //        justifyContent="flex-start"
       >
         <Box w="100%" h="5rem">
           {activePage ? (
@@ -111,7 +118,7 @@ export default function GalleryContainer() {
               justifyContent="center"
               p="0.5rem"
             >
-              <Button w="15rem" variant="nasa" onClick={handleOnBackClick}>
+              <Button minW="12.5rem" variant="nasa" onClick={handleOnBackClick}>
                 Back to Select Rover
               </Button>
 
