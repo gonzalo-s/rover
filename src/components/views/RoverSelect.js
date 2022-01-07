@@ -71,7 +71,7 @@ function RoverSelect() {
           variant="nasa"
         >
           <Button w="10rem" h="10rem" onClick={handleCuriositySelect}>
-            Curiosity
+            CURIOSITY
           </Button>
           <Button
             w="10rem"
@@ -80,10 +80,10 @@ function RoverSelect() {
             borderRadius="0"
             onClick={handleOpportunitySelect}
           >
-            Opportunity
+            OPPORTUNITY
           </Button>
           <Button w="10rem" h="10rem" onClick={handleSpiritSelect}>
-            Spirit
+            SPIRIT
           </Button>
         </ButtonGroup>
       </Box>
