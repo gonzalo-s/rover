@@ -17,7 +17,6 @@ export default function Solpicker() {
   const [isValidNumber, setIsValidNumber] = useState(true);
 
   let selectedDate = filters.date.value;
-  console.log(daypickerParameters);
   if (filters.date.type !== "sol") {
     let equivalentDate = daypickerParameters.equivalentDates.find(
       (d) => d.equivalentEarthDate === filters.date.value
