@@ -74,7 +74,7 @@ export default function GalleryContainer() {
       className="galleryTitleWrapper"
       w="100%"
       h="100%"
-      justifyContent={"flex-start"}
+      justifyContent={"center"}
     >
       <Box
         display="flex"
@@ -117,12 +117,17 @@ export default function GalleryContainer() {
         pb="1rem"
         alignItems="center"
       >
-        <Box w="100%" h="5rem">
+        <Box
+          w="100%"
+          h="5rem"
+          className="filtersWrapper"
+          display={"flex"}
+          justifyContent={"center"}
+        >
           {activePage ? (
             <Box
               display="flex"
               direction="row"
-              w="100%"
               h="90%"
               alignItems="center"
               justifyContent="center"
