@@ -8,10 +8,9 @@ import { Button } from "@chakra-ui/react";
 export default function CalendarDatePicker() {
   const { filters, daypickerParameters, selectDate } = useAppContext();
 
-  let selectedDate;
-  if (filters.date.type === "earth") {
-    selectedDate = parseISO(filters.date.value);
-  } else {
+  let selectedDate = parseISO(filters.date.value);
+
+  if (filters.date.type !== "earth") {
     let equivalentDate = daypickerParameters.equivalentDates.find(
       (d) => d.sol === filters.date.value
     ).equivalentEarthDate;

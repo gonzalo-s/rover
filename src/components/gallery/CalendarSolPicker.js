@@ -11,11 +11,23 @@ import {
 } from "@chakra-ui/react";
 
 export default function Solpicker() {
-  const { solParameters, selectDate } = useAppContext();
+  const { solParameters, selectDate, filters, daypickerParameters } =
+    useAppContext();
   const { maxSol, minSol, sol } = solParameters;
-
   const [isValidNumber, setIsValidNumber] = useState(true);
-  const [value, setValue] = useState(null);
+
+  let selectedDate = filters.date.value;
+  console.log(daypickerParameters);
+  if (filters.date.type !== "sol") {
+    let equivalentDate = daypickerParameters.equivalentDates.find(
+      (d) => d.equivalentEarthDate === filters.date.value
+    ).sol;
+
+    selectedDate = equivalentDate;
+  }
+
+  const [value, setValue] = useState(selectedDate);
+
   function handleOnChange(value) {
     setValue(value);
     setIsValidNumber(sol.includes(value));
@@ -30,6 +42,7 @@ export default function Solpicker() {
     <Box w="100%">
       <NumberInput
         className="numberInput"
+        value={value}
         max={maxSol}
         min={minSol}
         keepWithinRange={true}
@@ -45,9 +58,9 @@ export default function Solpicker() {
       >
         <Box display="flex">
           <Box
-            w="10rem"
+            w={["20rem", "20rem", "10rem"]}
             bg="whiteAlpha.500"
-            display="flex"
+            display={["none", "none", "flex"]}
             alignItems={"center"}
             justifyContent={"flex-end"}
             fontWeight="semibold"
@@ -55,7 +68,7 @@ export default function Solpicker() {
             textDecoration={isValidNumber ? "none" : "line-through"}
           >
             <Text textAlign={"center"}>
-              {value == null ? "Select Sol" : "Sol: "}
+              {value == null ? "Select Sol: " : "Sol: "}
             </Text>
           </Box>
           <NumberInputField
@@ -68,8 +81,11 @@ export default function Solpicker() {
             textDecoration={isValidNumber ? "none" : "line-through"}
           />
         </Box>
-
-        <NumberInputStepper>
+        <NumberInputStepper
+          w={["5rem", "5rem", "1rem"]}
+          display={"flex"}
+          flexDirection={["row", "row", "column"]}
+        >
           <NumberIncrementStepper />
           <NumberDecrementStepper />
         </NumberInputStepper>

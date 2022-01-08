@@ -78,13 +78,18 @@ export default function GalleryContainer() {
     >
       <Box
         display="flex"
-        flexDirection={"row"}
+        flexDirection={["column", "column", "row"]}
         wrap={"nowrap"}
         w="100%"
         justifyContent={"space-between"}
         alignItems={"center"}
       >
-        <Image src={logo} borderRadius="full" boxSize="120px" pl="20px" />
+        <Image
+          src={logo}
+          borderRadius="full"
+          boxSize="120px"
+          pl={["0", "0", "20px"]}
+        />{" "}
         <Stack
           className="RoverName"
           w="50%"
@@ -93,12 +98,17 @@ export default function GalleryContainer() {
           justifyContent="center"
           letterSpacing="0.5rem"
         >
-          <Text fontSize="6xl" color="white">
+          <Text
+            display={"flex"}
+            fontSize="6xl"
+            color="white"
+            textAlign={"center"}
+          >
             {" "}
             {filters.rover?.toUpperCase()}
           </Text>
         </Stack>
-        <Box boxSize="120px" />
+        <Box boxSize="120px" display={["none", "none", "flex"]} />
       </Box>
       <Box
         className="galleryWrapper"
@@ -117,6 +127,7 @@ export default function GalleryContainer() {
               alignItems="center"
               justifyContent="center"
               p="0.5rem"
+              flexWrap={["wrap", "wrap", "nowrap"]}
             >
               <Button minW="12.5rem" variant="nasa" onClick={handleOnBackClick}>
                 Back to Select Rover
@@ -136,7 +147,7 @@ export default function GalleryContainer() {
             </HStack>
           )}
         </Box>
-        <Box display={"flex"} flexDirection={"column"} w="100%">
+        <Box display={"flex"} flexDirection={"column"} w="100%" pt="2rem">
           {activePage ? <Gallery activePage={activePage} /> : ""}
           {activePage ? <GalleryPagesNav activePage={activePage} /> : ""}
         </Box>

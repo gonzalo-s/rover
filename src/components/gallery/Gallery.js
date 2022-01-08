@@ -20,7 +20,11 @@ export default function Gallery({ activePage }) {
       justifyContent="center"
     >
       {activeView === "gallery" ? (
-        <SimpleGrid columns={5} spacingX="1rem" spacingY="1rem">
+        <SimpleGrid
+          columns={["1", "2", "4", "5"]}
+          spacingX="1rem"
+          spacingY="1rem"
+        >
           {activePage.map((photo) => {
             return (
               <Box

@@ -16,7 +16,7 @@ function App() {
 
   const { activeView } = useAppContext();
 
-  //console.log(theme);
+  console.log(theme);
 
   return (
     <QueryClientProvider client={queryClient}>

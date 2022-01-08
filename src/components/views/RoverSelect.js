@@ -31,13 +31,18 @@ function RoverSelect() {
     <VStack className="roverSelectWrapper" w="100%" minH="100%">
       <Box
         display="flex"
-        flexDirection={"row"}
+        flexDirection={["column", "column", "row"]}
         wrap={"nowrap"}
         w="100%"
         justifyContent={"space-between"}
         alignItems={"center"}
       >
-        <Image src={logo} borderRadius="full" boxSize="120px" pl="20px" />
+        <Image
+          src={logo}
+          borderRadius="full"
+          boxSize="120px"
+          pl={["0", "0", "20px"]}
+        />
         <Stack
           className="selectRoverTitle"
           w="50%"
@@ -46,12 +51,17 @@ function RoverSelect() {
           justifyContent="center"
           letterSpacing="0.5rem"
         >
-          <Text fontSize="6xl" color="white">
+          <Text
+            display={"flex"}
+            fontSize="6xl"
+            color="white"
+            textAlign={"center"}
+          >
             {" "}
             SELECT ROVER
           </Text>
         </Stack>
-        <Box boxSize="120px" />
+        <Box boxSize="120px" display={["none", "none", "flex"]} />
       </Box>
 
       <Box
@@ -61,7 +71,7 @@ function RoverSelect() {
         w="100%"
         h="100%"
         justifyContent="space-around"
-        pt="1rem"
+        alignItems={"center"}
         pb="1rem"
       >
         <ButtonGroup
@@ -70,19 +80,29 @@ function RoverSelect() {
           colorScheme="whiteAlpha"
           variant="nasa"
         >
-          <Button w="10rem" h="10rem" onClick={handleCuriositySelect}>
+          <Button
+            w="10rem"
+            h="10rem"
+            letterSpacing={["0", "0.1rem"]}
+            onClick={handleCuriositySelect}
+          >
             CURIOSITY
           </Button>
           <Button
             w="10rem"
             h="10rem"
-            letterSpacing="0.1rem"
             borderRadius="0"
+            letterSpacing={["0", "0.1rem"]}
             onClick={handleOpportunitySelect}
           >
             OPPORTUNITY
           </Button>
-          <Button w="10rem" h="10rem" onClick={handleSpiritSelect}>
+          <Button
+            w="10rem"
+            h="10rem"
+            letterSpacing={["0", "0.1rem"]}
+            onClick={handleSpiritSelect}
+          >
             SPIRIT
           </Button>
         </ButtonGroup>
