@@ -4,7 +4,8 @@ import { useAppContext } from "../appContext";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 export default function CameraFilter() {
-  const { filters, filterParameters, selectCameras } = useAppContext();
+  const { filters, filterParameters, selectCameras, setPages } =
+    useAppContext();
 
   let availableCameras = filterParameters.availableCameras;
 
@@ -28,6 +29,7 @@ export default function CameraFilter() {
       newCameras.push(camera);
     }
     selectCameras(newCameras);
+    setPages(null);
   }
 
   return (

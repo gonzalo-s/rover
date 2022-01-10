@@ -33,9 +33,9 @@ export default function Photo() {
         className="imgTableWrapper"
         flexDirection="column"
         alignItems="center"
-        maxW="80%"
+        maxW={["100%", "100%", "80%"]}
         border="1px"
-        p="2rem"
+        p={["0.5rem", "0.5rem", "2rem"]}
         backgroundColor="whiteAlpha.200"
       >
         <Tooltip label="click to close">

@@ -1,26 +1,27 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
-import CalendarDayPicker from "./CalendarDayPicker";
+import CalendarDayPicker from "../filterComponents/CalendarDayPicker";
 import CameraFilter from "../filterComponents/CameraFilter";
-import Solpicker from "./CalendarSolPicker";
+import Solpicker from "../filterComponents/CalendarSolPicker";
 
 export default function GalleryFilters() {
   return (
     <Box
       className="filtersWrapper"
-      display="flex"
-      justifyContent={["center", "center", "flex-start"]}
+      display={"flex"}
+      flexDirection={["column", "column", "row"]}
+      justifyContent="center"
       alignItems="center"
       w="100%"
       h="100%"
     >
-      <Box w={["9rem", "10rem", "12.5rem"]} pl="0.5rem">
+      <Box w="12.5rem" pl={["0", "0", "0.5rem"]} pt={["0.2rem", "0.2rem", "0"]}>
         <CameraFilter />
       </Box>
-      <Box w={["9rem", "10rem", "12.5rem"]} pl="0.5rem">
+      <Box w="12.5rem" pl={["0", "0", "0.5rem"]} pt={["0.2rem", "0.2rem", "0"]}>
         <CalendarDayPicker />
       </Box>
-      <Box w={["9rem", "10rem", "12.5rem"]} pl="0.5rem">
+      <Box w="12.5rem" pl={["0", "0", "0.5rem"]} pt={["0.2rem", "0.2rem", "0"]}>
         <Solpicker />
       </Box>
     </Box>

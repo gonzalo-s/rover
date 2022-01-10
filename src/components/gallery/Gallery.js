@@ -12,6 +12,7 @@ export default function Gallery({ activePage }) {
 
   return (
     <Box
+      className="gridContainer"
       w="100%"
       h="100%"
       backgroundColor="whiteAlpha.200"
@@ -21,15 +22,18 @@ export default function Gallery({ activePage }) {
     >
       {activeView === "gallery" ? (
         <SimpleGrid
-          columns={["1", "2", "4", "5"]}
+          columns={["1", "1", "4", "5"]}
+          display={["flex", "flex", "grid"]}
+          flexDirection="column"
+          alignItems="center"
           spacingX="1rem"
           spacingY="1rem"
         >
           {activePage.map((photo) => {
             return (
               <Box
-                w="150px"
-                h="150px"
+                w={["90%", "90%", "150px"]}
+                h={["90%", "90%", "150px"]}
                 key={photo.id}
                 as="button"
                 onClick={() => handleOnClick(photo)}
@@ -39,7 +43,7 @@ export default function Gallery({ activePage }) {
                 justifyContent="center"
               >
                 <Image
-                  boxSize="150px"
+                  boxSize={["90%", "90%", "150px"]}
                   src={photo.img_src}
                   alt={`Photo from ${photo.rover}`}
                   borderRadius="2%"

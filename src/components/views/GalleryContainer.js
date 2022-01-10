@@ -24,6 +24,7 @@ export default function GalleryContainer() {
     setActiveView,
     rawPhotos,
     setRawPhotos,
+    resetAll,
   } = useAppContext();
   const isRawPhotosNull = rawPhotos === null ? true : false;
   const isThereADate = filters.date ? true : false;
@@ -68,6 +69,7 @@ export default function GalleryContainer() {
 
   function handleOnBackClick() {
     setActiveView("roverSelect");
+    resetAll();
   }
   return (
     <Stack
@@ -119,7 +121,7 @@ export default function GalleryContainer() {
       >
         <Box
           w="100%"
-          h="5rem"
+          // h="5rem"
           className="filtersWrapper"
           display={"flex"}
           justifyContent={"center"}
@@ -134,7 +136,11 @@ export default function GalleryContainer() {
               p="0.5rem"
               flexWrap={["wrap", "wrap", "nowrap"]}
             >
-              <Button minW="12.5rem" variant="nasa" onClick={handleOnBackClick}>
+              <Button
+                w={["12.5rem", "12.5rem", "15rem"]}
+                variant="nasa"
+                onClick={handleOnBackClick}
+              >
                 Back to Select Rover
               </Button>
 
@@ -152,7 +158,14 @@ export default function GalleryContainer() {
             </HStack>
           )}
         </Box>
-        <Box display={"flex"} flexDirection={"column"} w="100%" pt="2rem">
+        <Box
+          className="gallAndNavWrapper"
+          display={"flex"}
+          flexDirection={"column"}
+          w="100%"
+          pt="2rem"
+          justifyContent="center"
+        >
           {activePage ? <Gallery activePage={activePage} /> : ""}
           {activePage ? <GalleryPagesNav activePage={activePage} /> : ""}
         </Box>

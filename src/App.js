@@ -16,8 +16,6 @@ function App() {
 
   const { activeView } = useAppContext();
 
-  console.log(theme);
-
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
