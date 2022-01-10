@@ -1,70 +1,81 @@
-# Getting Started with Create React App
+<H1 align='center'> ROVER APP</H1><br>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div>This project shows photos taken by NASA's Curiosity, Opportunity, and Spirit rovers on Mars.
 
-## Available Scripts
+Each Rover has its own gallery of photos that can be filtered by Earth Date, Sol Date, and Camera.
 
-In the project directory, you can run:
+</div><br>
 
-### `yarn start`
+## Setup
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Install dependencies
 
-### `yarn test`
+<code>
+npm i # or yarn
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+</code>
 
-### `yarn build`
+<br>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Run local server
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<code>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+npm start # or yarn start
 
-### `yarn eject`
+</code>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+<br>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### ROVER Details
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+---
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+<br>
 
-## Learn More
+<p>
+Photos are organized by the sol (Martian rotation or day) on which they were taken, counting up from the rover's landing date. A photo taken on Curiosity's 1000th Martian sol exploring Mars, for example, will have a sol attribute of 1000. If instead you prefer to search by the Earth date on which a photo was taken, you can do that, too. <br>
+Cameras shown by rover:</p><br><br>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+| Abbreviation | Camera                                             | Curiosity | Opportunity | Spirit |
+| ------------ | -------------------------------------------------- | --------- | ----------- | ------ |
+| FHAZ         | Front Hazard Avoidance Camera                      | ✔         | ✔           | ✔      |
+| RHAZ         | Rear Hazard Avoidance Camera                       | ✔         | ✔           | ✔      |
+| MAST         | Mast Camera                                        | ✔         |             |        |
+| CHEMCAM      | Chemistry and Camera Complex                       | ✔         |             |        |
+| MAHLI        | Mars Hand Lens Imager                              | ✔         |             |        |
+| MARDI        | Mars Descent Imager                                | ✔         |             |        |
+| NAVCAM       | Navigation Camera                                  | ✔         | ✔           | ✔      |
+| PANCAM       | Panoramic Camera                                   |           | ✔           | ✔      |
+| MINITES      | Miniature Thermal Emission Spectrometer (Mini-TES) |           | ✔           | ✔      |
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+<br><br>
 
-### Code Splitting
+### Built With
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+<br>
 
-### Analyzing the Bundle Size
+- React.js
+- JavaScript
+- HTML
+- NPM
+- CSS
+- ChakraUI
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### API<br>
 
-### Making a Progressive Web App
+<br>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+**[NASA API](https://api.nasa.gov/)**
 
-### Advanced Configuration
+<br>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+### Contact<br>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Gonzalo Soler - [Linkedin](https://www.linkedin.com/in/gonzalo-soler/)<br>
 
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Email - <gonzalosoler@gmail.com>
