@@ -33,7 +33,6 @@ export function AppContextProvider({ children }) {
   });
 
   const resetAll = () => {
-    console.log("reset manifest");
     setManifest();
     setRawPhotos(null);
     setPages(null);
@@ -53,13 +52,6 @@ export function AppContextProvider({ children }) {
       page: 1,
     });
   };
-
-  // console.log("-filterParameters: ", filterParameters);
-  // console.log("-filters :", filters);
-  console.log("-manifest :", manifest);
-  // console.log("-pages :", pages);
-  // console.log("-rawPhotos :", rawPhotos);
-  // console.log("- daypickerParameters :", daypickerParameters);
 
   function filterPhotosByCameras(rawPhotos, cameras) {
     let newPhotos = rawPhotos.filter((photos) => {
@@ -177,8 +169,6 @@ export function AppContextProvider({ children }) {
   }
 
   useEffect(() => {
-    console.log("useEffect manifest");
-
     if (filters.rover && !manifest) {
       getManifestsByName(filters.rover)
         .then((data) => {
@@ -228,7 +218,6 @@ export function AppContextProvider({ children }) {
   }, [filterParameters, filters, manifest]);
   const getMaxPageAndPaginate = useCallback(
     (photos) => {
-      console.log("PAGINATING");
       let newFilterParameters = JSON.parse(JSON.stringify(filterParameters));
       let imgPerPage = 25;
       let maxPage = Math.ceil(photos.length / imgPerPage);
@@ -259,12 +248,7 @@ export function AppContextProvider({ children }) {
   );
 
   useEffect(() => {
-    console.log("useEffect paginate");
-    console.log("rawPhotos: ", rawPhotos);
-    console.log("pages: ", pages);
-
     if (rawPhotos && !pages) {
-      console.log("useEffect paginate TRUE");
       getMaxPageAndPaginate(filterPhotosByCameras(rawPhotos, filters.cameras));
     }
   }, [filters.cameras, getMaxPageAndPaginate, rawPhotos, pages]);
