@@ -15,6 +15,7 @@ Project deployed using Vercel **[HERE](https://rover-rho.vercel.app/rover)**
 Install dependencies
 
 <code>
+  
 npm i # or yarn
 
 </code>
