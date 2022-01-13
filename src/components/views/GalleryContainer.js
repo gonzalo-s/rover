@@ -29,7 +29,6 @@ export default function GalleryContainer() {
   const isRawPhotosNull = rawPhotos === null ? true : false;
   const isThereADate = filters.date ? true : false;
   const isQueryEnabled = isRawPhotosNull && isThereADate ? true : false;
-
   let activePage = null;
   const { isLoading, isError, error } = useQuery(
     ["getPhotosByEarthSolName", filters],

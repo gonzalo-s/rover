@@ -16,6 +16,8 @@ export function AppContextProvider({ children }) {
   const [manifest, setManifest] = useState();
   const [daypickerParameters, setDaypickerParameters] = useState({});
   const [solParameters, setSolParameters] = useState({});
+  const [urlParsed, setUrlParsed] = useState(false);
+  // const [url, setUrl] = useState(null);
   const [filterParameters, setFilterParameters] = useState({
     maxDate: null,
     maxSol: null,
@@ -51,7 +53,79 @@ export function AppContextProvider({ children }) {
 
       page: 1,
     });
+    resetUrl();
   };
+
+  useEffect(() => {
+    const firstLoadUrl = new URLSearchParams(window.location.search);
+
+    if (firstLoadUrl.toString() !== "") {
+      setRawPhotos(null);
+      let newQueryObj = getValuesFromQueryString(firstLoadUrl);
+      setFilters(newQueryObj);
+      setUrlParsed(true);
+    } else {
+      resetUrl();
+      setUrlParsed(false);
+    }
+  }, []);
+
+  function getValuesFromQueryString(queryString) {
+    let newQueryObj = {
+      date: {
+        type: null,
+        value: null,
+      },
+      page: 1,
+    };
+
+    for (var pair of queryString.entries()) {
+      let key = pair[0];
+      let value = pair[1];
+
+      if (key === "dateType") {
+        newQueryObj.date.type = value;
+      } else if (key === "dateValue") {
+        newQueryObj.date.value = value;
+      } else if (key === "page") {
+        newQueryObj.page = parseInt(value);
+      } else if (key === "cameras") {
+        newQueryObj.cameras = value.split(",");
+      } else {
+        newQueryObj[key] = value;
+      }
+    }
+
+    return newQueryObj;
+  }
+
+  function setQueryString() {
+    let newFilters = {};
+    if (filters.rover === null) return window.history.pushState({}, "", ` `);
+    if (filters.rover) {
+      newFilters.rover = filters.rover;
+      newFilters.page = filters.page;
+    }
+    if (filters.date) {
+      newFilters.dateType = filters.date.type;
+      newFilters.dateValue = filters.date.value;
+    }
+    if (filters.cameras) {
+      newFilters.cameras = filters.cameras;
+    }
+
+    const newUrl = new URLSearchParams(newFilters);
+
+    return window.history.pushState({}, "", `?${newUrl}`);
+  }
+
+  if (activeView !== "roverSelect") {
+    setQueryString();
+  }
+
+  function resetUrl() {
+    return window.history.pushState({}, "", `rover`);
+  }
 
   function filterPhotosByCameras(rawPhotos, cameras) {
     let newPhotos = rawPhotos.filter((photos) => {
@@ -81,13 +155,6 @@ export function AppContextProvider({ children }) {
     setSolParameters(parameters);
   }
 
-  // const setDefaultFromManifest = useCallback(
-  //   (manifest) => {
-
-  //   },
-  //   [filterParameters, filters]
-  // );
-
   function setAvailableCameras(availableCameras) {
     let newFilterParameters = JSON.parse(JSON.stringify(filterParameters));
     newFilterParameters.availableCameras = availableCameras;
@@ -102,7 +169,8 @@ export function AppContextProvider({ children }) {
     let newSolDate;
 
     if ((dateType === "sol") & (dateValue !== manifest.max_sol)) {
-      newSolDate = dateValue;
+      newSolDate = parseInt(dateValue);
+
       photos.map((date) => {
         if (date.sol === newSolDate) {
           availableCameras = date.cameras;
@@ -167,6 +235,36 @@ export function AppContextProvider({ children }) {
   function selectActivePhoto(activePhoto) {
     setActivePhoto(activePhoto);
   }
+  function pagination(photos, maxPage, photosPPage = 25) {
+    let idxStart = 0;
+    let counter = 1;
+    let newPhotos = [];
+    function loop() {
+      if (counter <= maxPage) {
+        const newPage = photos.slice(idxStart, idxStart + photosPPage);
+        newPhotos.push(newPage);
+        counter++;
+        idxStart += photosPPage;
+        loop();
+      } else {
+        return;
+      }
+    }
+    loop();
+    return newPhotos;
+  }
+  const getMaxPageAndPaginate = useCallback(
+    (photos) => {
+      let newFilterParameters = JSON.parse(JSON.stringify(filterParameters));
+      let filteredPhotos = filterPhotosByCameras(photos, filters.cameras);
+      let imgPerPage = 25;
+      let maxPage = Math.ceil(filteredPhotos.length / imgPerPage);
+      newFilterParameters.maxPage = maxPage;
+      setFilterParameters(newFilterParameters);
+      setPages(pagination(filteredPhotos, maxPage, imgPerPage));
+    },
+    [filterParameters, filters.cameras]
+  );
 
   useEffect(() => {
     if (filters.rover && !manifest) {
@@ -174,78 +272,54 @@ export function AppContextProvider({ children }) {
         .then((data) => {
           let manifest = data.data.photo_manifest;
           setDatepicker(manifest);
+          setActiveView("gallery");
           setSol(manifest);
           setManifest(manifest);
+          let dateType = urlParsed ? filters.date.type : "earth";
+          let dateValue = urlParsed ? filters.date.value : manifest.max_date;
+          let availableCameras = getAvailableCamerasFromManifest(
+            dateType,
+            dateValue,
+            manifest
+          );
           const setAvailableCamMaxDateSolFromManifest = (manifest) => {
             let newFilterParameters = JSON.parse(
               JSON.stringify(filterParameters)
             );
-            let availableCameras = getAvailableCamerasFromManifest(
-              "earth",
-              manifest.max_date,
-              manifest
-            );
+
             newFilterParameters.availableCameras = availableCameras;
             newFilterParameters.maxDate = manifest.max_date;
             newFilterParameters.maxSol = manifest.max_sol;
             setFilterParameters(newFilterParameters);
           };
-          const selectDateCameraFromManifest = (
-            dateType,
-            dateValue,
-            manifest
-          ) => {
+          const selectDateCamera = (dateType, dateValue) => {
             let newFilters = JSON.parse(JSON.stringify(filters));
-            let cameras = getAvailableCamerasFromManifest(
-              dateType,
-              manifest.max_date,
-              manifest
-            );
+
+            newFilters.cameras = urlParsed ? filters.cameras : availableCameras;
+
             newFilters.date = { type: dateType, value: dateValue };
-            newFilters.cameras = cameras;
-            newFilters.page = 1;
+            if (!urlParsed) {
+              newFilters.page = 1;
+            }
             setFilters(newFilters);
           };
 
           setAvailableCamMaxDateSolFromManifest(manifest);
-          selectDateCameraFromManifest("earth", manifest.max_date, manifest);
-          //setDefaultFromManifest(manifest);
+          selectDateCamera(dateType, dateValue);
+          setUrlParsed(false);
         })
         .catch((error) => {
           console.log("error fetching manifest: ", error);
         });
     }
-  }, [filterParameters, filters, manifest]);
-  const getMaxPageAndPaginate = useCallback(
-    (photos) => {
-      let newFilterParameters = JSON.parse(JSON.stringify(filterParameters));
-      let imgPerPage = 25;
-      let maxPage = Math.ceil(photos.length / imgPerPage);
-      newFilterParameters.maxPage = maxPage;
-
-      function pagination(photos, maxPage, photosPPage = 25) {
-        let idxStart = 0;
-        let counter = 1;
-        let newPhotos = [];
-        function loop() {
-          if (counter <= maxPage) {
-            const newPage = photos.slice(idxStart, idxStart + photosPPage);
-            newPhotos.push(newPage);
-            counter++;
-            idxStart += photosPPage;
-            loop();
-          } else {
-            return;
-          }
-        }
-        loop();
-        return newPhotos;
-      }
-      setFilterParameters(newFilterParameters);
-      setPages(pagination(photos, maxPage, imgPerPage));
-    },
-    [filterParameters]
-  );
+  }, [
+    filterParameters,
+    filters,
+    getMaxPageAndPaginate,
+    manifest,
+    rawPhotos,
+    urlParsed,
+  ]);
 
   useEffect(() => {
     if (rawPhotos && !pages) {
@@ -269,7 +343,6 @@ export function AppContextProvider({ children }) {
         setActiveView,
         selectActivePhoto,
         activePhoto,
-        //getAvailableCamerasFromManifest,
         setAvailableCameras,
         rawPhotos,
         setRawPhotos,
@@ -277,6 +350,7 @@ export function AppContextProvider({ children }) {
         solParameters,
         resetAll,
         setPages,
+        urlParsed,
       }}
     >
       {children}
