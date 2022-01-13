@@ -8,7 +8,6 @@ Each Rover has its own gallery of photos that can be filtered by Earth Date, Sol
 
 ## Setup
 
----
 
 Install dependencies
 
@@ -31,7 +30,6 @@ npm start # or yarn start
 
 ### ROVER Details
 
----
 
 <br>
 
@@ -72,7 +70,6 @@ Cameras shown by rover:</p><br><br>
 
 <br>
 
----
 
 ### Contact<br>
 
