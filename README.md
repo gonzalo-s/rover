@@ -6,12 +6,16 @@ Each Rover has its own gallery of photos that can be filtered by Earth Date, Sol
 
 </div><br>
 
+Project deployed using Vercel **[HERE](https://rover-rho.vercel.app/rover)**
+
+
 ## Setup
 
 
 Install dependencies
 
 <code>
+  
 npm i # or yarn
 
 </code>
